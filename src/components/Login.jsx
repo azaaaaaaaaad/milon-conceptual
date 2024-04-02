@@ -4,9 +4,9 @@ import { AuthContext } from "./AuthProvider/AuthProvider";
 
 
 const Login = () => {
-  
 
-    const {loginUser} = useContext(AuthContext);
+
+    const { loginUser, googleLogin, setUser } = useContext(AuthContext);
 
     const user = useContext(AuthContext);
     console.log(user);
@@ -18,6 +18,19 @@ const Login = () => {
         console.log(email, password);
 
         loginUser(email, password)
+    }
+
+    const handleGoogleLogin =() => {
+        googleLogin()
+        .then(result=>{
+            setUser(result.user);
+        })
+    }
+    const handleFbLogin =() => {
+        googleLogin()
+        .then(result=>{
+            setUser(result.user);
+        })
     }
 
     return (
@@ -49,6 +62,7 @@ const Login = () => {
                         <p>New in Milon? Please <Link to={'/register'}>
                             <button className="btn btn-outline btn-success">Register</button>
                         </Link></p>
+                        <button onClick={handleGoogleLogin} className="btn btn-secondary">Google Login</button>
                     </form>
                 </div>
             </div>

@@ -5,7 +5,7 @@ import { AuthContext } from "./AuthProvider/AuthProvider";
 
 const Register = () => {
 
-    const { registerUser } = useContext(AuthContext);
+    const { registerUser, setUser } = useContext(AuthContext);
     const [error, setError] = useState('')
 
     const handleRegister = e => {
@@ -36,7 +36,7 @@ const Register = () => {
 
         registerUser(email, password)
         .then(result=>{
-            console.log(result.user);
+            setUser(result.user);
         })
         .catch(error=>{
             setError(error.message);
@@ -68,18 +68,12 @@ const Register = () => {
                                     <span className="label-text">Password</span>
                                 </label>
                                 <input type="password" name="password" placeholder="password" className="input input-bordered" required />
-                                <label className="label">
-                                    <a href="#" className="label-text-alt link link-hover">Forgot password?</a>
-                                </label>
                             </div>
                             <div className="form-control">
                                 <label className="label">
                                     <span className="label-text">Confirm Password</span>
                                 </label>
                                 <input type="password" name="confirmPassword" placeholder="confirm password" className="input input-bordered" required />
-                                <label className="label">
-                                    <a href="#" className="label-text-alt link link-hover">Forgot password?</a>
-                                </label>
                             </div>
                             {
                                 error && <small className=" text-red-700">{error}</small>
