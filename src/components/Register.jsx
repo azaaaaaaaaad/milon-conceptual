@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "./AuthProvider/AuthProvider";
 
@@ -6,15 +6,41 @@ import { AuthContext } from "./AuthProvider/AuthProvider";
 const Register = () => {
 
     const { registerUser } = useContext(AuthContext);
+    const [error, setError] = useState('')
 
     const handleRegister = e => {
         e.preventDefault();
         const name = e.target.name.value;
         const email = e.target.email.value;
         const password = e.target.password.value;
-        console.log(name, email, password);
+        const confirmPassword = e.target.confirmPassword.value;
+        console.log(name, email, password, confirmPassword);
+
+        if (password.length < 6) {
+            setError("password must be 6 characters")
+            return
+        }
+        if (password !== confirmPassword) {
+            setError('password did not matched')
+            return
+        }
+        if (!/\d{2,}$/.test(password)) {
+           setError("password must end with at least 2 numbers") 
+           return
+        }
+        if (!/[!@#$%^&*]/.test(password)) {
+            setError("password must contain at least 1 special character")
+            return
+        }
+        setError('')
 
         registerUser(email, password)
+        .then(result=>{
+            console.log(result.user);
+        })
+        .catch(error=>{
+            setError(error.message);
+        })
     }
     return (
         <div>
@@ -29,7 +55,7 @@ const Register = () => {
                                 <label className="label">
                                     <span className="label-text">User Name</span>
                                 </label>
-                                <input type="text" name="name" placeholder="user name" className="input input-bordered" required />
+                                <input type="text" name="name" placeholder="user name" className="input input-bordered"  />
                             </div>
                             <div className="form-control">
                                 <label className="label">
@@ -46,6 +72,18 @@ const Register = () => {
                                     <a href="#" className="label-text-alt link link-hover">Forgot password?</a>
                                 </label>
                             </div>
+                            <div className="form-control">
+                                <label className="label">
+                                    <span className="label-text">Confirm Password</span>
+                                </label>
+                                <input type="password" name="confirmPassword" placeholder="confirm password" className="input input-bordered" required />
+                                <label className="label">
+                                    <a href="#" className="label-text-alt link link-hover">Forgot password?</a>
+                                </label>
+                            </div>
+                            {
+                                error && <small className=" text-red-700">{error}</small>
+                            }
                             <div className="form-control mt-6">
                                 <button className="btn btn-primary">Register</button>
                             </div>
